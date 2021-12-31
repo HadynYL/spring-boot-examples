@@ -30,7 +30,7 @@ pipeline {
     stage('Push Image') {
       steps {
         script {
-          docker.withRegistry('registry.cn-hangzhou.aliyuncs.com/', '7860bb7e-4d64-4d20-9947-85d5e92564c7') {
+          docker.withRegistry('https://registry.cn-hangzhou.aliyuncs.com/', '7860bb7e-4d64-4d20-9947-85d5e92564c7') {
             dockerImage.push()
           }
         }
