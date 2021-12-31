@@ -10,7 +10,7 @@ pipeline {
   stages {
     stage('Deploy JAR') {
       steps {
-        sh 'mvn clean deploy -DaltDeploymentRepository=leaderrun::default::https://devops.leaderrun.com/nexus/repository/maven-snapshots'
+        sh 'mvn clean deploy -DaltDeploymentRepository=rdc-snapshots::default::https://packages.aliyun.com/maven/repository/2040963-snapshot-adtACS/
       }
     }
     stage('Build Image') {
@@ -23,18 +23,18 @@ pipeline {
             cd target/dependency
             jar -xf ../*.jar
           """
-          dockerImage = docker.build "leaderrun/${pom.artifactId}:${pom.version}", "${env.WORKSPACE}/${pom.artifactId}-serv"
+          dockerImage = docker.build "alemer/${pom.artifactId}:${pom.version}", "${env.WORKSPACE}/${pom.artifactId}-serv"
         }
       }
     }
-    // stage('Push Image') {
-    //   steps {
-    //     script {
-    //       docker.withRegistry('https://devops.leaderrun.com/v2', 'docker-registry') {
-    //         dockerImage.push()
-    //       }
-    //     }
-    //   }
-    // }
+    stage('Push Image') {
+      steps {
+        script {
+          docker.withRegistry('registry.cn-hangzhou.aliyuncs.com/', '7860bb7e-4d64-4d20-9947-85d5e92564c7') {
+            dockerImage.push()
+          }
+        }
+      }
+    }
   }
 }
